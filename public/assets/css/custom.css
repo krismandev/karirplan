@@ -1,0 +1,54 @@
+/* Style */
+.underline {text-decoration:underline;}
+.bold {font-weight:bold}
+.italic {font-style:italic}
+.normal {text-decoration:none;}
+.uppercase {text-transform:uppercase;}
+.lowercase {text-transform:lowercase;}
+.capitalize {text-transform:capitalize;}
+.center {text-align:center}
+.right {text-align:right}
+.left {text-align:left}
+.clear {clear:both;}
+.white {color:white}
+.black {color:black;}
+.red {color:darkred}
+.blue {color:blue;}
+.green {color:green;}
+.border {border:2px solid black}
+.border-2 {border:2px solid blue}
+.border-style {border-top:2px dotted black;border-bottom:2px dotted black;}
+.no-margin {margin:0px}
+.no-padding {padding:0px}
+.padding-10 {padding:10px;}
+.padding-7 {padding:7px;}
+.padding-5 {padding:5px;}
+.padding-3 {padding:3px;}
+.tombol-wa {padding:10px 15px;}
+.float-left {float:left}
+.float-right {float:right}
+.pointer {cursor:pointer}
+.default {cursor:default}
+.margin-3 {margin:3px;}
+.margin-3-horizon {margin-left:3px;margin-right:3px}
+.margin-5-horizon {margin-left:5px;margin-right:5px}
+.margin-7-horizon {margin-left:7px;margin-right:7px}
+.margin-3-top {margin-top:3px}
+/* Style */
+
+/* Eksternal Mode */
+.select-login {padding-left:32px !important;height:42px;}
+.margin-right-25 {margin-right:25px !important}
+
+.col-md-0 {
+	position: relative;
+	min-height: 1px;
+	padding-right: 0px;
+	padding-left: 2px;
+	margin-top:30px;
+	width:1% !important;
+}
+
+.parentJudul {text-align:center;}
+.subJudul {padding-left:40px !important}
+.subASK {padding-left:35px !important}
