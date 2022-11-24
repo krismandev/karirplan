@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\modelPertanyaan;
+use App\modelPertanyaanDropdown;
+use App\modelUnsur;
+use App\modelSubUnsur;
 use Illuminate\Support\Facades\DB;
 use Auth;
 class PlanController extends Controller
@@ -27,6 +30,22 @@ class PlanController extends Controller
                         
         $jabfung = DB::table('jabfung')->get();
         
+        $listUnsur = modelUnsur::get();
+
+        $listSubUnsur = modelSubUnsur::get();
+        
+        $listPertanyaan = modelPertanyaan::get();
+
+        $listPertanyaanDropdown = modelPertanyaanDropdown::get();
+
+        return view("plan.input")
+                ->with("jabfung", $jabfung)->with("data", $data)
+                /*Pengabdian*/
+                ->with("listUnsur", $listUnsur) 
+                ->with("listSubUnsur", $listSubUnsur) 
+                ->with("listPertanyaan", $listPertanyaan)
+                ->with("listPertanyaanDropdown", $listPertanyaanDropdown);
+        // dd($listSubUnsur);
         /* UNSUR PENDIDIKAN */
 
         #KODE A_I_A 
