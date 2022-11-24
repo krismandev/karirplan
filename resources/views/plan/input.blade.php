@@ -155,11 +155,11 @@
                         <tr class="bold uppercase">
                         
                            
-                            <td class="parentJudul">{{$loop->iteration}}</td>
+                            <td class="parentJudul">{{$unsur->kode_unsur}}</td>
                     
                             <td colspan="3">{{$unsur->nama_unsur}}</td>
                         </tr>
-                            @foreach($listSubUnsur as $subUnsur)
+                            @foreach($listSubUnsur as $parent => $subUnsur)
                                 @if($unsur->id_unsur == $subUnsur->id_unsur)
                                     <tr class="bold uppercase">
                                   
@@ -167,11 +167,11 @@
                                         <td colspan="3">{{$subUnsur->nama_subUnsur}}</td>
                                     </tr>
                                     
-                                        @foreach($listPertanyaan as $item)
+                                        @foreach($listPertanyaan as $anak => $item)
                                             @if($item->id_subUnsur == $subUnsur->id_subUnsur )
                                             <tr>
                                                 <td></td>
-                                                <td>{{$item->pertanyaan}}</td>
+                                                <td> {{$item->pertanyaan}}</td>
                                                 @if($item->jenis == 1)
                                                 <td>
                                                     <select class="form-control" id="{{$item->kode}}" name="{{$item->kode}}">

@@ -30,7 +30,7 @@ class PlanController extends Controller
                         
         $jabfung = DB::table('jabfung')->get();
         
-        $listUnsur = modelUnsur::get();
+        $listUnsur = modelUnsur::orderby('kode_unsur')->get();
 
         $listSubUnsur = modelSubUnsur::get();
         
