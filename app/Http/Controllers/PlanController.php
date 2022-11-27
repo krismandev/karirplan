@@ -328,6 +328,65 @@ class PlanController extends Controller
         return $data;
     }
 
+    public function hitungUnsurPengabdian($request,$list_pertanyaan_existing)
+    {
+
+        $data = [];
+        foreach ($request->all() as $key => $value) {
+            $list_pertanyaan = $list_pertanyaan_existing;
+            $checkIsUnsurC = explode("-",$key)[0] == "C" ? true : false;
+            try {
+                if ($checkIsUnsurC == true) {
+                    $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
+
+                    switch ($key) {
+                        //case spesial. contohnya seperti A-II-A yg nilai ny bergantung pada jabfung. sambil bikin ini, perhatiin panduan ny jg
+                        // karna ada beberpa pertanyaan yg kondisiny tidak seragam/ unik seperti ini.
+                        
+                        case 'value':
+                            // 
+                            break;
+                        default:
+                            //default ini untuk pertanyaan yg tidak ada kondisi khusus seperti A-II-A 
+                            
+                            // kalau jenis nya 1 (Ya / Tidak)
+                            if ($pertanyaan->jenis == 1) {
+                                //kalau jewabannya Tidak
+                                if ($value == 0) {
+                                    $kredit = 0;
+                                }else{
+                                    //kalau jawabannya Ya. kredit = kredit yg disimpan ditable pertanyaan
+                                    $kredit = $pertanyaan->kredit;
+                                }
+                            } elseif ($pertanyaan->jenis == 2) {
+                                if ($pertanyaan->batas != null && $value > $pertanyaan->batas) {
+                                    $kredit = $pertanyaan->batas * $pertanyaan->kredit;
+                                }else{
+                                    $kredit = $value * $pertanyaan->kredit;
+                                }                            
+                            }elseif ($pertanyaan->jenis == 3) {
+                                $kredit = $value;
+                            }
+    
+    
+                            $push = [
+                                "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
+                                "jawaban"=>$value,
+                                "nilai"=>$kredit
+                            ];
+    
+                            array_push($data,$push);
+                            break;
+                    }
+                }
+            } catch (\Exception $e) {
+                dd($e->getMessage());
+            }
+        }
+
+        return $data;
+    }
+
     public function store( Request $request){
         // dd($request->all());
         //jabfung tujuan. nilai ny angka kredit tujuan
@@ -335,8 +394,8 @@ class PlanController extends Controller
 
         $list_pertanyaan_existing = modelPertanyaan::all();
         $list_data_unsur_pendidikan = $this->hitungUnsurPendidikan($request,$list_pertanyaan_existing);
-
-        
+        $list_data_unsur_pengabdian = $this->hitungUnsurPengabdian($request,$list_pertanyaan_existing);
+        // dd($list_data_unsur_pendidikan);
 
 
         $sum_unsur_pendidikan = 0.0;
@@ -344,10 +403,20 @@ class PlanController extends Controller
             $sum_unsur_pendidikan += $item["nilai"];
         }
 
-        // dd($sum_unsur_pendidikan);
-        dd($this->persentase_jabfung_pembelajaran($jabfung, $sum_unsur_pendidikan));   
+        $sum_unsur_pengabdian = 0.0;
+        foreach ($list_data_unsur_pengabdian as $item) {
+            $sum_unsur_pengabdian += $item["nilai"];
+        }
 
-    //    $data_persentase_pembelajaran = persentase_jabfung_pembelajaran($jabfung, $data_pembelajaran);
+
+        // dd($sum_unsur_pendidikan);
+
+        dd($this->persentase_jabfung_pendidikan($jabfung, $sum_unsur_pendidikan));   
+        // dd($this->persentase_jabfung_pengabdian($jabfung,$sum_unsur_pengabdian));
+
+        
+
+    //    $data_persentase_pembelajaran = persentase_jabfung_pendidikan($jabfung, $data_pembelajaran);
 
       
 
@@ -381,19 +450,36 @@ class PlanController extends Controller
            return redirect('/hasil_plan');
     }
 
-    function persentase_jabfung_pembelajaran($jabfung, $data){
+    function persentase_jabfung_pendidikan($jabfung, $data){
         if($jabfung == 100 or $jabfung == 150){
-             $hasil = $data * 0.55;
+            $minimal = $jabfung * 0.55;
+            $hasil = $data;
         }elseif($jabfung == 200 or $jabfung == 300){
-            $hasil = $data * 0.45;
+            $minimal = $jabfung * 0.45;
+            $hasil = $data;
         }elseif($jabfung == 400 or $jabfung == 550 or $jabfung == 700){
-             $hasil = $data * 0.40;
+            $minimal = $jabfung * 0.40;
+            $hasil = $data;
         }elseif($jabfung == 850 or $jabfung == 1050){
-             $hasil = $data * 0.35;
+            $minimal = $jabfung * 0.35;
+            $hasil = $data;
         }else{
             $hasil = 0;
         }
-        return $hasil;
+
+        dd($minimal);
+
+        if ($hasil > $minimal) {
+            $mencapaiMinimum = true;
+        }else {
+            $mencapaiMinimum = false;
+        }
+
+        $data = [
+            "hasil"=>$hasil,
+            "mencapaiMinimum"=>$mencapaiMinimum
+        ];
+        return $data;
     }
 
     function persentase_jabfung_penelitian($jabfung, $data){
