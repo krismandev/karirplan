@@ -192,11 +192,13 @@ class PlanController extends Controller
 
     public function hitungUnsurPendidikan($request,$list_pertanyaan_existing)
     {
+        
 
         $data = [];
         foreach ($request->all() as $key => $value) {
             $list_pertanyaan = $list_pertanyaan_existing;
             $checkIsUnsurA = explode("-",$key)[0] == "A" ? true : false;
+            
             try {
                 if ($checkIsUnsurA == true) {
                     $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
@@ -273,23 +275,77 @@ class PlanController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-                dd($e->getMessage());
+                $e->getMessage();
             }
         }
 
         return $data;
     }
 
+    public function hitungUnsurPenelitian($request, $list_pertanyaan_existing)
+    {
+        $data = [];
+        foreach ($request->all() as $key => $value) {
+            $list_pertanyaan = $list_pertanyaan_existing;
+            $checkIsUnsurB = explode("-",$key)[0] == "B" ? true : false;
+            try {
+                if ($checkIsUnsurB == true) {
+                    $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
+                    
+
+                    switch ($key) {
+                        // case ''
+                        case 'value':
+                            break;
+                        default:
+                           
+                            // kalau jenis nya 1 (Ya / Tidak)
+                            if ($pertanyaan->jenis == 1) {
+                                //kalau jewabannya Tidak
+                                if ($value == 0) {
+                                    $kredit = 0;
+                                }else{
+                                    //kalau jawabannya Ya. kredit = kredit yg disimpan ditable pertanyaan
+                                    $kredit = $pertanyaan->kredit;
+                                }
+                            } elseif ($pertanyaan->jenis == 2) {
+                                if ($value > $pertanyaan->batas) {
+                                    $kredit = $pertanyaan->batas * $pertanyaan->kredit;
+                                }else{
+                                    $kredit = $value * $pertanyaan->kredit;
+                                }                            
+                            }elseif ($pertanyaan->jenis == 3) {
+                                $kredit = $value;
+                            }
+    
+                            $push = [
+                                "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
+                                "jawaban"=>$value,
+                                "nilai"=>$kredit
+                            ];
+    
+                            array_push($data,$push);
+                            break;
+                    }
+                }
+
+            } catch (\Exception $e) {
+                $e->getMessage();
+            }
+        }
+
+        // dd($data);
+        return $data;
+    }
+
     public function store( Request $request){
         // dd($request->all());
         //jabfung tujuan. nilai ny angka kredit tujuan
-        $jabfung = $request -> plan_jabfung;
+        $jabfung = $request->plan_jabfung;
 
         $list_pertanyaan_existing = modelPertanyaan::all();
         $list_data_unsur_pendidikan = $this->hitungUnsurPendidikan($request,$list_pertanyaan_existing);
-
-        
-
+        $list_data_unsur_penelitian = $this->hitungUnsurPenelitian($request,$list_pertanyaan_existing);
 
         $sum_unsur_pendidikan = 0.0;
         foreach ($list_data_unsur_pendidikan as $item) {
@@ -297,14 +353,16 @@ class PlanController extends Controller
         }
 
         // dd($sum_unsur_pendidikan);
-        dd($this->persentase_jabfung_pembelajaran($jabfung, $sum_unsur_pendidikan));   
+        // dd($this->persentase_jabfung_pembelajaran($jabfung, $sum_unsur_pendidikan));   
 
     //    $data_persentase_pembelajaran = persentase_jabfung_pembelajaran($jabfung, $data_pembelajaran);
 
-      
-
-    
-                          ;
+    //PENELITIAN
+        $sum_unsur_penelitian= 0.0;
+        foreach($list_data_unsur_penelitian as $item){
+            $sum_unsur_penelitian += $item["nilai"];
+        }
+    // dd($this->persentase_jabfung_penelitian($jabfung, $sum_unsur_penelitian));  
     //    $data_persentase_penelitiann = persentase_jabfung_penelitian($jabfung, $data_penelitian);
        
 
