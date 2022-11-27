@@ -1,5 +1,7 @@
 @extends("layouts.app")
 @section("konten")
+<form action="{{ route('kirim_plan') }}" method="post">
+{{ csrf_field() }}
 <div class="col-xs-12">
     <div class="sec-box">
         <a class="closethis">Close</a>
@@ -11,9 +13,7 @@
              <div class="table-box">
                 <table class="table">
                     <tbody>
-                        <form action="{{ route('kirim_plan') }}" method="post">
-                              {{ csrf_field() }}
-                    @foreach($data as $item)
+                        @foreach($data as $item)
                         <tr>
                             <td width="30%;">
                                 Nama : 
@@ -61,73 +61,73 @@
     </div>
 </div>
 <div class="col-xs-12">
-<div class="sec-box">
-        <a class="closethis">Close</a>
-        <header>
-            <h2 class="heading">Perencanaan Kenaikan Pangkat</h2>
-        </header>
-        <div class="contents">
-            <a class="togglethis">Toggle</a>
-            <div class="table-box">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="col-md-9">Pertanyaan</th>
-                            <th class="col-md-4">Jawaban</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Nama Semester: 
-                            </td>
-                            <td>
-                                <input type="text" name="semester" class="form-control" maxlength="15" placeholder="Contoh: 20181" id="namaSemester">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Tanggal Mulai Semester:
-                            </td>
-                            <td>
-                                <input type="date" name="" class="form-control" id="awalSemester" placeholder="Contoh: 01/01/2018">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Tanggal Akhir Semester:
-                            </td>
-                            <td>
-                                <input type="date" name="" class="form-control" id="akhirSemester" placeholder="Contoh: 01/01/2018">
-                            </td>
-                        </tr>
-                    </tbody>
-                     <thead>
-                        <tr>
-                            <th class="col-md-9">Angka kredit saat ini</th>
-                            <th class="col-md-4">Angka kredit yang direncanakan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                 @foreach($data as $item)
-                                   {{ $item -> angka_kredit }}
-                                 @endforeach
-                            </td>
-                            <td>
-                                <span id="plan_kredit"></span>
-                                <input type="hidden" name="jabfung" id="plan_kredit">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                
+    <div class="sec-box">
+            <a class="closethis">Close</a>
+            <header>
+                <h2 class="heading">Perencanaan Kenaikan Pangkat</h2>
+            </header>
+            <div class="contents">
+                <a class="togglethis">Toggle</a>
+                <div class="table-box">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-md-9">Pertanyaan</th>
+                                <th class="col-md-4">Jawaban</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Nama Semester: 
+                                </td>
+                                <td>
+                                    <input type="text" name="semester" class="form-control" maxlength="15" placeholder="Contoh: 20181" id="namaSemester">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Tanggal Mulai Semester:
+                                </td>
+                                <td>
+                                    <input type="date" name="" class="form-control" id="awalSemester" placeholder="Contoh: 01/01/2018">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Tanggal Akhir Semester:
+                                </td>
+                                <td>
+                                    <input type="date" name="" class="form-control" id="akhirSemester" placeholder="Contoh: 01/01/2018">
+                                </td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th class="col-md-9">Angka kredit saat ini</th>
+                                <th class="col-md-4">Angka kredit yang direncanakan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @foreach($data as $item)
+                                    {{ $item -> angka_kredit }}
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <span id="plan_kredit"></span>
+                                    <input type="hidden" name="jabfung" id="plan_kredit">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
         </div>
     </div>
-</div>
 </div>
 
 
@@ -218,6 +218,11 @@
     </div>
 </div>
 @endforeach
+
+<div class="col-xs-12 right">
+    <button class="btn btn-md btn-success" type="submit">Simpan Perencanaan</button>
+</div>
+</form>
                        
                     
 
