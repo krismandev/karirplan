@@ -1717,6 +1717,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     $(".selectize").selectize();
     function onOffQue(state,$classID) {

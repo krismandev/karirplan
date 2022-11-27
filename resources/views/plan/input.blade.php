@@ -159,7 +159,7 @@
                     
                             <td colspan="3">{{$unsur->nama_unsur}}</td>
                         </tr>
-                            @foreach($listSubUnsur as $parent => $subUnsur)
+                            @foreach($listSubUnsur as $subUnsur)
                                 @if($unsur->id_unsur == $subUnsur->id_unsur)
                                     <tr class="bold uppercase">
                                   
@@ -167,7 +167,7 @@
                                         <td colspan="3">{{$subUnsur->nama_subUnsur}}</td>
                                     </tr>
                                     
-                                        @foreach($listPertanyaan as $anak => $item)
+                                        @foreach($listPertanyaan  as $item)
                                             @if($item->id_subUnsur == $subUnsur->id_subUnsur )
                                             <tr>
                                                 <td></td>

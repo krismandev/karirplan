@@ -45,196 +45,148 @@ class PlanController extends Controller
                 ->with("listSubUnsur", $listSubUnsur) 
                 ->with("listPertanyaan", $listPertanyaan)
                 ->with("listPertanyaanDropdown", $listPertanyaanDropdown);
-        // dd($listSubUnsur);
-        /* UNSUR PENDIDIKAN */
-
-        #KODE A_I_A 
-        $A_I_A  = modelPertanyaan::where("kode","LIKE","A-I-A%")->get();
-
-        /* UNSUR PELAKSANAAN PENDIDIKAN */
         
-        #KODE A_II_A
-        $A_II_A = modelPertanyaan::where("kode","LIKE","A-II-A%")->get();
-        #KODE A_II_B
-        $A_II_B = modelPertanyaan::where("kode","LIKE","A-II-B%")->get();
-        #KODE A_II_C
-        $A_II_C = modelPertanyaan::where("kode","LIKE","A-II-C%")->get();
-        #KODE A_II_D_1
-        $A_II_D_1 = modelPertanyaan::where("kode","LIKE","A-II-D-1%")->get();
-        #KODE A_II_D_2
-        $A_II_D_2 = modelPertanyaan::where("kode","LIKE","A-II-D-2%")->get();
-        #KODE A_II_E
-        $A_II_E = modelPertanyaan::where("kode","LIKE","A-II-E%")->get();
-        #KODE A_II_F
-        $A_II_F = modelPertanyaan::where("kode","LIKE","A-II-F%")->get();
-        #KODE A_II_G
-        $A_II_G = modelPertanyaan::where("kode","LIKE","A-II-G%")->get();
-        #KODE A_II_H
-        $A_II_H = modelPertanyaan::where("kode","LIKE","A-II-H%")->get();
-        #KODE A_II_I
-        $A_II_I = modelPertanyaan::where("kode","LIKE","A-II-I%")->get();
-        #KODE A_II_J
-        $A_II_J = modelPertanyaan::where("kode","LIKE","A-II-J%")->get();
-        #KODE A_II_K
-        $A_II_K = modelPertanyaan::where("kode","LIKE","A-II-K%")->get();
-        #KODE A_II_L
-        $A_II_L = modelPertanyaan::where("kode","LIKE","A-II-L%")->get();
-        #KODE A_II_M
-        $A_II_M = modelPertanyaan::where("kode","LIKE","A-II-M%")->get();
+        
+        // /* UNSUR PENDIDIKAN */
 
-        /* UNSUR PENELITIAN */
+        // #KODE A_I_A 
+        // $A_I_A  = modelPertanyaan::where("kode","LIKE","A-I-A%")->get();
 
-        #KODE B_I_A_1
-        $B_I_A_1 = modelPertanyaan::where("kode","LIKE","B-I-A-1%")->get();
-        #KODE B_I_A_2
-        $B_I_A_2 = modelPertanyaan::where("kode","LIKE","B-I-A-2%")->get();
-        #KODE B_I_A_3
-        $B_I_A_3 = modelPertanyaan::where("kode","LIKE","B-I-A-3%")->get();
-        #KODE B_I_B_1
-        $B_I_B_1 = modelPertanyaan::where("kode","LIKE","B-I-B-1%")->get();
-        #KODE B_I_B_2
-        $B_I_B_2 = modelPertanyaan::where("kode","LIKE","B-I-B-2%")->get();
-        #KODE B_I_B_3
-        $B_I_B_3 = modelPertanyaan::where("kode","LIKE","B-I-B-3%")->get();
-        #KODE B_I_B_4
-        $B_I_B_4 = modelPertanyaan::where("kode","LIKE","B-I-B-4%")->get();
-        #KODE B_I_B_5
-        $B_I_B_5 = modelPertanyaan::where("kode","LIKE","B-I-B-5%")->get();
+        // /* UNSUR PELAKSANAAN PENDIDIKAN */
+        
+        // #KODE A_II_A
+        // $A_II_A = modelPertanyaan::where("kode","LIKE","A-II-A%")->get();
+        // #KODE A_II_B
+        // $A_II_B = modelPertanyaan::where("kode","LIKE","A-II-B%")->get();
+        // #KODE A_II_C
+        // $A_II_C = modelPertanyaan::where("kode","LIKE","A-II-C%")->get();
+        // #KODE A_II_D_1
+        // $A_II_D_1 = modelPertanyaan::where("kode","LIKE","A-II-D-1%")->get();
+        // #KODE A_II_D_2
+        // $A_II_D_2 = modelPertanyaan::where("kode","LIKE","A-II-D-2%")->get();
+        // #KODE A_II_E
+        // $A_II_E = modelPertanyaan::where("kode","LIKE","A-II-E%")->get();
+        // #KODE A_II_F
+        // $A_II_F = modelPertanyaan::where("kode","LIKE","A-II-F%")->get();
+        // #KODE A_II_G
+        // $A_II_G = modelPertanyaan::where("kode","LIKE","A-II-G%")->get();
+        // #KODE A_II_H
+        // $A_II_H = modelPertanyaan::where("kode","LIKE","A-II-H%")->get();
+        // #KODE A_II_I
+        // $A_II_I = modelPertanyaan::where("kode","LIKE","A-II-I%")->get();
+        // #KODE A_II_J
+        // $A_II_J = modelPertanyaan::where("kode","LIKE","A-II-J%")->get();
+        // #KODE A_II_K
+        // $A_II_K = modelPertanyaan::where("kode","LIKE","A-II-K%")->get();
+        // #KODE A_II_L
+        // $A_II_L = modelPertanyaan::where("kode","LIKE","A-II-L%")->get();
+        // #KODE A_II_M
+        // $A_II_M = modelPertanyaan::where("kode","LIKE","A-II-M%")->get();
 
-        #KODE B_I_C
-        $B_I_C = modelPertanyaan::where("kode","LIKE","B-I-C%")->get();
-        #KODE B_I_D
-        $B_I_D = modelPertanyaan::where("kode","LIKE","B-I-D%")->get();
-        #KODE B_I_E
-        $B_I_E = modelPertanyaan::where("kode","LIKE","B-I-E%")->get();
-        #KODE B_I_F
-        $B_I_F = modelPertanyaan::where("kode","LIKE","B-I-F%")->get();
-        #KODE B_I_G
-        $B_I_G = modelPertanyaan::where("kode","LIKE","B-I-G%")->get();
-        #KODE B_I_H
-        $B_I_H = modelPertanyaan::where("kode","LIKE","B-I-H%")->get();
+        // /* UNSUR PENELITIAN */
 
-        /* UNSUR PENGABDIAN MASYARAKAT */
+        // #KODE B_I_A_1
+        // $B_I_A_1 = modelPertanyaan::where("kode","LIKE","B-I-A-1%")->get();
+        // #KODE B_I_A_2
+        // $B_I_A_2 = modelPertanyaan::where("kode","LIKE","B-I-A-2%")->get();
+        // #KODE B_I_A_3
+        // $B_I_A_3 = modelPertanyaan::where("kode","LIKE","B-I-A-3%")->get();
+        // #KODE B_I_B_1
+        // $B_I_B_1 = modelPertanyaan::where("kode","LIKE","B-I-B-1%")->get();
+        // #KODE B_I_B_2
+        // $B_I_B_2 = modelPertanyaan::where("kode","LIKE","B-I-B-2%")->get();
+        // #KODE B_I_B_3
+        // $B_I_B_3 = modelPertanyaan::where("kode","LIKE","B-I-B-3%")->get();
+        // #KODE B_I_B_4
+        // $B_I_B_4 = modelPertanyaan::where("kode","LIKE","B-I-B-4%")->get();
+        // #KODE B_I_B_5
+        // $B_I_B_5 = modelPertanyaan::where("kode","LIKE","B-I-B-5%")->get();
 
-        #KODE C_I_A
-        $C_I_A = modelPertanyaan::where("kode","LIKE","C-I-A%")->get();
-        #KODE C_I_B
-        $C_I_B = modelPertanyaan::where("kode","LIKE","C-I-B%")->get();
-        #KODE C_I_C_1
-        $C_I_C_1 = modelPertanyaan::where("kode","LIKE","C-I-C-1%")->get();
-        #KODE C_I_C_2
-        $C_I_C_2 = modelPertanyaan::where("kode","LIKE","C-I-C-2%")->get();
-        #KODE C_I_D
-        $C_I_D = modelPertanyaan::where("kode","LIKE","C-I-D%")->get();
-        #KODE C_I_E
-        $C_I_E = modelPertanyaan::where("kode","LIKE","C-I-E%")->get();
-        #KODE C_I_F
-        $C_I_F = modelPertanyaan::where("kode","LIKE","C-I-F%")->get();
-        #KODE C_I_G
-        $C_I_G = modelPertanyaan::where("kode","LIKE","C-I-G%")->get();
+        // #KODE B_I_C
+        // $B_I_C = modelPertanyaan::where("kode","LIKE","B-I-C%")->get();
+        // #KODE B_I_D
+        // $B_I_D = modelPertanyaan::where("kode","LIKE","B-I-D%")->get();
+        // #KODE B_I_E
+        // $B_I_E = modelPertanyaan::where("kode","LIKE","B-I-E%")->get();
+        // #KODE B_I_F
+        // $B_I_F = modelPertanyaan::where("kode","LIKE","B-I-F%")->get();
+        // #KODE B_I_G
+        // $B_I_G = modelPertanyaan::where("kode","LIKE","B-I-G%")->get();
+        // #KODE B_I_H
+        // $B_I_H = modelPertanyaan::where("kode","LIKE","B-I-H%")->get();
+
+        // /* UNSUR PENGABDIAN MASYARAKAT */
+
+        // #KODE C_I_A
+        // $C_I_A = modelPertanyaan::where("kode","LIKE","C-I-A%")->get();
+        // #KODE C_I_B
+        // $C_I_B = modelPertanyaan::where("kode","LIKE","C-I-B%")->get();
+        // #KODE C_I_C_1
+        // $C_I_C_1 = modelPertanyaan::where("kode","LIKE","C-I-C-1%")->get();
+        // #KODE C_I_C_2
+        // $C_I_C_2 = modelPertanyaan::where("kode","LIKE","C-I-C-2%")->get();
+        // #KODE C_I_D
+        // $C_I_D = modelPertanyaan::where("kode","LIKE","C-I-D%")->get();
+        // #KODE C_I_E
+        // $C_I_E = modelPertanyaan::where("kode","LIKE","C-I-E%")->get();
+        // #KODE C_I_F
+        // $C_I_F = modelPertanyaan::where("kode","LIKE","C-I-F%")->get();
+        // #KODE C_I_G
+        // $C_I_G = modelPertanyaan::where("kode","LIKE","C-I-G%")->get();
       
-        /* UNSUR PENUNJANG */
-        #KODE D_I_A
-        $D_I_A = modelPertanyaan::where("kode","LIKE","D-I-A%")->get();
-        #KODE D_I_B_1
-        $D_I_B_1 = modelPertanyaan::where("kode","LIKE","D-I-B-1%")->get();
-        #KODE D_I_B_2
-        $D_I_B_2 = modelPertanyaan::where("kode","LIKE","D-I-B-2%")->get();
-        #KODE D_I_C_1
-        $D_I_C_1 = modelPertanyaan::where("kode","LIKE","D-I-C-1%")->get();
-        #KODE D_I_C_2
-        $D_I_C_2 = modelPertanyaan::where("kode","LIKE","D-I-C-2%")->get();
-        #KODE D_I_D
-        $D_I_D = modelPertanyaan::where("kode","LIKE","D-I-D%")->get();
-        #KODE D_I_E
-        $D_I_E = modelPertanyaan::where("kode","LIKE","D-I-E%")->get();
-        #KODE D_I_F_1
-        $D_I_F_1 = modelPertanyaan::where("kode","LIKE","D-I-F-1%")->get();
-        #KODE D_I_F_2
-        $D_I_F_2 = modelPertanyaan::where("kode","LIKE","D-I-F-2%")->get();
-        #KODE D_I_G
-        $D_I_G = modelPertanyaan::where("kode","LIKE","D-I-G%")->get();
-        #KODE D_I_H
-        $D_I_H = modelPertanyaan::where("kode","LIKE","D-I-H%")->get();
-        #KODE D_I_I
-        $D_I_I = modelPertanyaan::where("kode","LIKE","D-I-I%")->get();
-        #KODE D_I_J
-        $D_I_J = modelPertanyaan::where("kode","LIKE","D-I-J%")->get();
+        // /* UNSUR PENUNJANG */
+        // #KODE D_I_A
+        // $D_I_A = modelPertanyaan::where("kode","LIKE","D-I-A%")->get();
+        // #KODE D_I_B_1
+        // $D_I_B_1 = modelPertanyaan::where("kode","LIKE","D-I-B-1%")->get();
+        // #KODE D_I_B_2
+        // $D_I_B_2 = modelPertanyaan::where("kode","LIKE","D-I-B-2%")->get();
+        // #KODE D_I_C_1
+        // $D_I_C_1 = modelPertanyaan::where("kode","LIKE","D-I-C-1%")->get();
+        // #KODE D_I_C_2
+        // $D_I_C_2 = modelPertanyaan::where("kode","LIKE","D-I-C-2%")->get();
+        // #KODE D_I_D
+        // $D_I_D = modelPertanyaan::where("kode","LIKE","D-I-D%")->get();
+        // #KODE D_I_E
+        // $D_I_E = modelPertanyaan::where("kode","LIKE","D-I-E%")->get();
+        // #KODE D_I_F_1
+        // $D_I_F_1 = modelPertanyaan::where("kode","LIKE","D-I-F-1%")->get();
+        // #KODE D_I_F_2
+        // $D_I_F_2 = modelPertanyaan::where("kode","LIKE","D-I-F-2%")->get();
+        // #KODE D_I_G
+        // $D_I_G = modelPertanyaan::where("kode","LIKE","D-I-G%")->get();
+        // #KODE D_I_H
+        // $D_I_H = modelPertanyaan::where("kode","LIKE","D-I-H%")->get();
+        // #KODE D_I_I
+        // $D_I_I = modelPertanyaan::where("kode","LIKE","D-I-I%")->get();
+        // #KODE D_I_J
+        // $D_I_J = modelPertanyaan::where("kode","LIKE","D-I-J%")->get();
 
-        return view("plan.input")
-                ->with("jabfung", $jabfung)->with("data", $data)
-                /*Pengabdian*/
-                ->with("A_I_A", $A_I_A) 
-                /*Penelitian*/
-                ->with("A_II_A", $A_II_A)->with("A_II_B", $A_II_B)->with("A_II_C", $A_II_C)
-                ->with("A_II_D_1", $A_II_D_1)->with("A_II_D_2", $A_II_D_2)
-                ->with("A_II_E", $A_II_E)->with("A_II_F", $A_II_F)->with("A_II_G", $A_II_G)
-                ->with("A_II_H", $A_II_H)->with("A_II_I", $A_II_I)->with("A_II_J", $A_II_J)
-                ->with("A_II_K", $A_II_K)->with("A_II_L", $A_II_L)->with("A_II_M", $A_II_M)
-                ->with("B_I_A_1", $B_I_A_1)->with("B_I_A_2", $B_I_A_2)->with("B_I_A_3", $B_I_A_3)
-                ->with("B_I_B_1", $B_I_B_1)->with("B_I_B_2", $B_I_B_2)->with("B_I_B_3", $B_I_B_3)->with("B_I_B_4", $B_I_B_4)->with("B_I_B_5", $B_I_B_5)
-                ->with("B_I_C", $B_I_C)->with("B_I_D", $B_I_D)->with("B_I_E", $B_I_E)->with("B_I_F", $B_I_F)->with("B_I_G", $B_I_G)->with("B_I_H", $B_I_H)
-               /* Pengabdian Masyarakat */
-                ->with("C_I_A", $C_I_A)->with("C_I_B", $C_I_B)->with("C_I_C_1", $C_I_C_1)->with("C_I_C_2", $C_I_C_2)
-                ->with("C_I_D", $C_I_D)->with("C_I_E", $C_I_E)->with("C_I_F", $C_I_F)->with("C_I_G", $C_I_G)
-                /* Penunjang */
-                ->with("D_I_A", $D_I_A)->with("D_I_B_1", $D_I_B_1)->with("D_I_B_2", $D_I_B_2)
-                ->with("D_I_C_1", $D_I_C_1)->with("D_I_C_2", $D_I_C_2)
-                ->with("D_I_D", $D_I_D)->with("D_I_E", $D_I_E)
-                ->with("D_I_F_1", $D_I_F_1)->with("D_I_F_2", $D_I_F_2)
-                ->with("D_I_G", $D_I_G)
-                ->with("D_I_H", $D_I_H)
-                ->with("D_I_I", $D_I_I)
-                ->with("D_I_J", $D_I_J);
-
-        
-
-       
-        /* QUERY CADANGAN
-            #ID UNSUR 1 PENDIDIKAN
-            $unsur1 = DB::table('unsur as a')
-                    ->join('sub_unsur as b','b.id_unsur','=','a.id_unsur')
-                    ->join('pertanyaan as c','c.id_subUnsur','=','b.id_subUnsur')
-                    ->where('kode_unsur','A')->where('nama_unsur','Pendidikan')->get();
-            #ID UNSUR 2 PENELITIAN
-            $unsur2 = DB::table('unsur as a')
-                    ->join('sub_unsur as b','b.id_unsur','=','a.id_unsur')
-                    ->join('pertanyaan as c','c.id_subUnsur','=','b.id_subUnsur')
-                    ->where('kode_unsur','B')->where('nama_unsur','Penelitian')->get();
-            // dd($unsur2);
-            #ID UNSUR 3 PENGABDIAN MASYARAKAT
-            $unsur3 = DB::table('unsur as a')
-                    ->join('sub_unsur as b','b.id_unsur','=','a.id_unsur')
-                    ->join('pertanyaan as c','c.id_subUnsur','=','b.id_subUnsur')
-                    ->where('kode_unsur','C')->where('nama_unsur','Pengabdian Masyarakat')->get();
-            #ID UNSUR 4 PENUNJANG
-            $unsur4 = DB::table('unsur as a')
-                    ->join('sub_unsur as b','b.id_unsur','=','a.id_unsur')
-                    ->join('pertanyaan as c','c.id_subUnsur','=','b.id_subUnsur')
-                    ->where('kode_unsur','D')->where('nama_unsur','Penunjang')->get();
-            #ID UNSUR 5 PELAKSANAAN PENDIDIKAN
-            $unsur5 = DB::table('pertanyaan as a')
-                    ->join('sub_unsur as b','b.id_subUnsur','=','a.id_subUnsur')
-                    ->join('unsur as c','c.id_unsur','=','b.id_unsur')
-                    ->where('c.kode_unsur','A')->where('c.nama_unsur','Pelaksanaan Pendidikan')
-                    ->get();
-            // $unsur5 = DB::table('unsur as a')
-            //         ->join('sub_unsur as b','b.id_unsur','=','a.id_unsur')
-            //         ->groupby('b.id_subUnsur')
-            //         ->get();
-            // dd($unsur5);
-            // dd($unsur5);
-
-            return view("plan.input")
-                    ->with("jabfung", $jabfung)
-                    ->with("data", $data)
-                    ->with("unsur1", $unsur1)
-                    ->with("unsur2", $unsur2)
-                    ->with("unsur3", $unsur3)
-                    ->with("unsur4", $unsur4)
-                    ->with("unsur5", $unsur5);
-        */
-        
+        // return view("plan.input")
+        //         ->with("jabfung", $jabfung)->with("data", $data)
+        //         /*Pengabdian*/
+        //         ->with("A_I_A", $A_I_A) 
+        //         /*Penelitian*/
+        //         ->with("A_II_A", $A_II_A)->with("A_II_B", $A_II_B)->with("A_II_C", $A_II_C)
+        //         ->with("A_II_D_1", $A_II_D_1)->with("A_II_D_2", $A_II_D_2)
+        //         ->with("A_II_E", $A_II_E)->with("A_II_F", $A_II_F)->with("A_II_G", $A_II_G)
+        //         ->with("A_II_H", $A_II_H)->with("A_II_I", $A_II_I)->with("A_II_J", $A_II_J)
+        //         ->with("A_II_K", $A_II_K)->with("A_II_L", $A_II_L)->with("A_II_M", $A_II_M)
+        //         ->with("B_I_A_1", $B_I_A_1)->with("B_I_A_2", $B_I_A_2)->with("B_I_A_3", $B_I_A_3)
+        //         ->with("B_I_B_1", $B_I_B_1)->with("B_I_B_2", $B_I_B_2)->with("B_I_B_3", $B_I_B_3)->with("B_I_B_4", $B_I_B_4)->with("B_I_B_5", $B_I_B_5)
+        //         ->with("B_I_C", $B_I_C)->with("B_I_D", $B_I_D)->with("B_I_E", $B_I_E)->with("B_I_F", $B_I_F)->with("B_I_G", $B_I_G)->with("B_I_H", $B_I_H)
+        //        /* Pengabdian Masyarakat */
+        //         ->with("C_I_A", $C_I_A)->with("C_I_B", $C_I_B)->with("C_I_C_1", $C_I_C_1)->with("C_I_C_2", $C_I_C_2)
+        //         ->with("C_I_D", $C_I_D)->with("C_I_E", $C_I_E)->with("C_I_F", $C_I_F)->with("C_I_G", $C_I_G)
+        //         /* Penunjang */
+        //         ->with("D_I_A", $D_I_A)->with("D_I_B_1", $D_I_B_1)->with("D_I_B_2", $D_I_B_2)
+        //         ->with("D_I_C_1", $D_I_C_1)->with("D_I_C_2", $D_I_C_2)
+        //         ->with("D_I_D", $D_I_D)->with("D_I_E", $D_I_E)
+        //         ->with("D_I_F_1", $D_I_F_1)->with("D_I_F_2", $D_I_F_2)
+        //         ->with("D_I_G", $D_I_G)
+        //         ->with("D_I_H", $D_I_H)
+        //         ->with("D_I_I", $D_I_I)
+        //         ->with("D_I_J", $D_I_J);        
         
     }
 
