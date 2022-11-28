@@ -140,6 +140,61 @@ class PlanController extends Controller
         return $data;
     }
 
+    public function hitungUnsurPenelitian($request,$list_pertanyaan_existing)
+    {
+
+        $data = [];
+        foreach ($request->all() as $key => $value) {
+            $list_pertanyaan = $list_pertanyaan_existing;
+            $checkIsUnsurB = explode("-",$key)[0] == "B" ? true : false;
+            try {
+                if ($checkIsUnsurB == true) {
+                    $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
+                    // dd($pertanyaan);
+
+                    switch ($key) {
+                        
+                        case 'value':
+                            break;
+                        default:
+                            // kalau jenis nya 1 (Ya / Tidak)
+                            if ($pertanyaan->jenis == 1) {
+                                //kalau jewabannya Tidak
+                                if ($value == 0) {
+                                    $kredit = 0;
+                                }else{
+                                    //kalau jawabannya Ya. kredit = kredit yg disimpan ditable pertanyaan
+                                    $kredit = $pertanyaan->kredit;
+                                }
+                            } elseif ($pertanyaan->jenis == 2) {
+                                if ($pertanyaan->batas != null && $value > $pertanyaan->batas) {
+                                    $kredit = $pertanyaan->batas * $pertanyaan->kredit;
+                                }else{
+                                    $kredit = $value * $pertanyaan->kredit;
+                                }                            
+                            }elseif ($pertanyaan->jenis == 3) {
+                                $kredit = $value;
+                            }
+    
+    
+                            $push = [
+                                "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
+                                "jawaban"=>$value,
+                                "nilai"=>$kredit
+                            ];
+    
+                            array_push($data,$push);
+                            break;
+                    }
+                }
+            } catch (\Exception $e) {
+                $e->getMessage();
+            }
+        }
+
+        return $data;
+    }
+
     public function hitungUnsurPengabdian($request,$list_pertanyaan_existing)
     {
 
@@ -152,14 +207,11 @@ class PlanController extends Controller
                     $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
 
                     switch ($key) {
-                        //case spesial. contohnya seperti A-II-A yg nilai ny bergantung pada jabfung. sambil bikin ini, perhatiin panduan ny jg
-                        // karna ada beberpa pertanyaan yg kondisiny tidak seragam/ unik seperti ini.
                         
                         case 'value':
                             // 
                             break;
                         default:
-                            //default ini untuk pertanyaan yg tidak ada kondisi khusus seperti A-II-A 
                             
                             // kalau jenis nya 1 (Ya / Tidak)
                             if ($pertanyaan->jenis == 1) {
@@ -199,6 +251,62 @@ class PlanController extends Controller
         return $data;
     }
 
+    public function hitungUnsurPenunjang($request,$list_pertanyaan_existing)
+    {
+
+        $data = [];
+        foreach ($request->all() as $key => $value) {
+            $list_pertanyaan = $list_pertanyaan_existing;
+            $checkIsUnsurD = explode("-",$key)[0] == "D" ? true : false;
+            try {
+                if ($checkIsUnsurD == true) {
+                    $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
+
+                    switch ($key) {
+                        
+                        case 'value':
+                            // 
+                            break;
+                        default:
+                            
+                            // kalau jenis nya 1 (Ya / Tidak)
+                            if ($pertanyaan->jenis == 1) {
+                                //kalau jewabannya Tidak
+                                if ($value == 0) {
+                                    $kredit = 0;
+                                }else{
+                                    //kalau jawabannya Ya. kredit = kredit yg disimpan ditable pertanyaan
+                                    $kredit = $pertanyaan->kredit;
+                                }
+                            } elseif ($pertanyaan->jenis == 2) {
+                                if ($pertanyaan->batas != null && $value > $pertanyaan->batas) {
+                                    $kredit = $pertanyaan->batas * $pertanyaan->kredit;
+                                }else{
+                                    $kredit = $value * $pertanyaan->kredit;
+                                }                            
+                            }elseif ($pertanyaan->jenis == 3) {
+                                $kredit = $value;
+                            }
+    
+    
+                            $push = [
+                                "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
+                                "jawaban"=>$value,
+                                "nilai"=>$kredit
+                            ];
+    
+                            array_push($data,$push);
+                            break;
+                    }
+                }
+            } catch (\Exception $e) {
+                $e->getMessage();
+            }
+        }
+
+        return $data;
+    }
+
     public function store( Request $request){
         // dd($request->all());
         //jabfung tujuan. nilai ny angka kredit tujuan
@@ -206,13 +314,18 @@ class PlanController extends Controller
 
         $list_pertanyaan_existing = modelPertanyaan::all();
         $list_data_unsur_pendidikan = $this->hitungUnsurPendidikan($request,$list_pertanyaan_existing);
+        $list_data_unsur_penelitian = $this->hitungUnsurPenelitian($request,$list_pertanyaan_existing);
         $list_data_unsur_pengabdian = $this->hitungUnsurPengabdian($request,$list_pertanyaan_existing);
-        // dd($list_data_unsur_pendidikan);
-
-
+        $list_data_unsur_penunjang = $this->hitungUnsurPenunjang($request,$list_pertanyaan_existing);
+     
         $sum_unsur_pendidikan = 0.0;
         foreach ($list_data_unsur_pendidikan as $item) {
             $sum_unsur_pendidikan += $item["nilai"];
+        }
+
+        $sum_unsur_penelitian= 0.0;
+        foreach($list_data_unsur_penelitian as $item){
+            $sum_unsur_penelitian += $item["nilai"];
         }
 
         $sum_unsur_pengabdian = 0.0;
@@ -220,48 +333,22 @@ class PlanController extends Controller
             $sum_unsur_pengabdian += $item["nilai"];
         }
 
-
-        // dd($sum_unsur_pendidikan);
-
-        dd($this->persentase_jabfung_pendidikan($jabfung, $sum_unsur_pendidikan));   
-        // dd($this->persentase_jabfung_pengabdian($jabfung,$sum_unsur_pengabdian));
-
-        
-
-    //    $data_persentase_pembelajaran = persentase_jabfung_pendidikan($jabfung, $data_pembelajaran);
-
-    //PENELITIAN
-        $sum_unsur_penelitian= 0.0;
-        foreach($list_data_unsur_penelitian as $item){
-            $sum_unsur_penelitian += $item["nilai"];
+        $sum_unsur_penunjang = 0.0;
+        foreach ($list_data_unsur_penunjang as $item) {
+            $sum_unsur_penunjang += $item["nilai"];
         }
-    // dd($this->persentase_jabfung_penelitian($jabfung, $sum_unsur_penelitian));  
-    //    $data_persentase_penelitiann = persentase_jabfung_penelitian($jabfung, $data_penelitian);
+
+        // dd($this->persentase_jabfung_pendidikan($jabfung, $sum_unsur_pendidikan));   
+        // dd($this->persentase_jabfung_penelitian($jabfung,$sum_unsur_penelitian));
        
+        $semester = $request -> semester;
+        $nip = $request -> nip_pegawai;
 
-    //    $data_persentase_pengabdian = persentase_jabfung_pengabdian($jabfung, $data_pengabdian);
-       
-     
+        //  DB::table('hasil')->insert(
+        //     ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
+        // );
 
-
-    //    $data_persentase_penunjang = persentase_jabfung_penunjang($jabfung, $data_penunjang);
-
-        // $hasil = data_yes_no($data1, 200) + 
-        //          data_yes_no($data2, 150) + 
-        //          data_yes_no($data3, 3) +
-        //          $data_persentase_pembelajaran+
-        //          $data_persentase_penelitiann+
-        //          $data_persentase_pengabdian+
-        //          $data_persentase_penunjang;
-        //$data_persentase_pembelajaran;
-
-                 $semester = $request -> semester;
-                 $nip = $request -> nip_pegawai;
-
-                //  DB::table('hasil')->insert(
-                // ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
-                // );
-           return redirect('/hasil_plan');
+        return redirect('/hasil_plan');
     }
 
     function persentase_jabfung_pendidikan($jabfung, $data){
@@ -281,7 +368,7 @@ class PlanController extends Controller
             $hasil = 0;
         }
 
-        dd($minimal);
+        // dd($minimal);
 
         if ($hasil > $minimal) {
             $mencapaiMinimum = true;
