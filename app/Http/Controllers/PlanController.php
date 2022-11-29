@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\modelPertanyaan;
 use App\modelPertanyaanDropdown;
 use App\modelUnsur;
 use App\modelSubUnsur;
-use Illuminate\Support\Facades\DB;
+use App\Hasil;
 use Auth;
 class PlanController extends Controller
 {
@@ -309,6 +311,7 @@ class PlanController extends Controller
 
     public function store( Request $request){
         // dd($request->all());
+
         //jabfung tujuan. nilai ny angka kredit tujuan
         $jabfung = $request->plan_jabfung;
 
@@ -338,15 +341,75 @@ class PlanController extends Controller
             $sum_unsur_penunjang += $item["nilai"];
         }
 
-        // dd($this->persentase_jabfung_pendidikan($jabfung, $sum_unsur_pendidikan));   
-        // dd($this->persentase_jabfung_penelitian($jabfung,$sum_unsur_penelitian));
+        $hasil = $sum_unsur_pendidikan + $sum_unsur_penelitian + $sum_unsur_pengabdian + $sum_unsur_penunjang ;
+        // dd($hasil);
        
         $semester = $request -> semester;
         $nip = $request -> nip_pegawai;
 
-        //  DB::table('hasil')->insert(
-        //     ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
-        // );
+        // dd($request->all());
+
+        $data_bukti = [];
+        foreach ($request->all() as $key => $value){
+            if (str_contains($key, 'bukti')) { 
+                $data_bukti += [ $key => $value ];
+                // array_push($data_bukti, $value);
+            }
+        }
+        
+        // dd($data_bukti);
+      
+        $data_pertanyaan =[];
+        foreach($data_bukti as $key => $item) {  
+            
+           $kode_bukti = Str::substr($key,6);
+           if($kode_bukti){
+                $id_pertanyaan = DB::table('pertanyaan')
+                            ->where('kode',$kode_bukti)
+                            ->first();
+                array_push($data_pertanyaan, $id_pertanyaan);
+           }
+      
+        }
+
+        $db_hasil = new Hasil;
+        $db_hasil->id_pegawai = $nip;
+        $db_hasil->semester = $semester;
+        $db_hasil->skor = $hasil;
+        $db_hasil->target = $jabfung;
+        $db_hasil->save();
+
+        foreach ($data_pertanyaan as $key => $pertanyaan){
+            foreach($data_bukti as $a => $value) { 
+                // dd(file($value));
+                if ($value != NUll) {
+                    $bukti = $value;
+                    $new_bukti = time()."_".$bukti->getClientOriginalName();
+                    // dd($new_bukti);
+                    $tujuan_upload = 'file/bukti';
+                    $bukti->move($tujuan_upload,$new_bukti);
+                    
+                        $db_hasil_detail = DB::table('hasil_detail')->insert([
+                            'hasil_id' => $db_hasil->id, 
+                            'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
+                            'bukti' => $new_bukti,
+                        ]);
+                }else{
+                    $db_hasil_detail = DB::table('hasil_detail')->insert([
+                        'hasil_id' => $db_hasil->id, 
+                        'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
+                        'bukti' => Null,
+                    ]);
+                }
+            }
+
+        }
+
+        // foreach($list_pertanyaan_existing as $item){
+        //     DB::table('hasil_detail')->insert(
+        //         ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
+        //     );
+        // }
 
         return redirect('/hasil_plan');
     }

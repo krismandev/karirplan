@@ -1,6 +1,6 @@
 @extends("layouts.app")
 @section("konten")
-<form action="{{ route('kirim_plan') }}" method="post">
+<form action="{{ route('kirim_plan') }}" method="post" enctype="multipart/form-data">
 {{ csrf_field() }}
 <div class="col-xs-12">
     <div class="sec-box">
@@ -145,10 +145,10 @@
                     <thead>
                         <tr>
                             <th class="col-md-0">No</th>
-                            <th class="col-md-8">Pertanyaan</th>
-                            <th class="col-md-2">Jawaban</th>
-                            <th class="col-md-2">Bukti</th>
+                            <th class="col-md-10">Pertanyaan</th>
+                            <th class="col-md-3">Jawaban</th>
                         </tr>
+                       
                     </thead>
                     <tbody>
 
@@ -198,11 +198,19 @@
                                                     </select>
                                                 </td>
                                                 @endif
-                                                <td>
-                                                <div class="input-group">
-                                                    <input class="form-control" type="file" id="formFile" name="bukti_{{$item->kode}}">
-                                                </div>
-                                                </td>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td class="bold">
+                                                        Bukti
+                                                        
+                                                    </td>
+                                                    <td>
+                                                    <div class="input-group">
+                                                            <input class="form-control" type="file" id="formFile" name="bukti_{{$item->kode}}" value="">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                
                                             
                                             </tr>
                                                 
