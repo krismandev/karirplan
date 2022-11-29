@@ -411,7 +411,8 @@ class PlanController extends Controller
 
         // dd($sum_unsur_pendidikan);
 
-        dd($this->persentase_jabfung_pendidikan($jabfung, $sum_unsur_pendidikan));   
+        // dd($this->persentase_jabfung_pendidikan($jabfung, $sum_unsur_pendidikan));
+        return back()->with('error','Ada Error')   
         // dd($this->persentase_jabfung_pengabdian($jabfung,$sum_unsur_pengabdian));
 
         
@@ -467,7 +468,6 @@ class PlanController extends Controller
             $hasil = 0;
         }
 
-        dd($minimal);
 
         if ($hasil > $minimal) {
             $mencapaiMinimum = true;
