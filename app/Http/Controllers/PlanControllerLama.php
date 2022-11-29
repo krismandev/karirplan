@@ -235,7 +235,7 @@ class PlanControllerLama extends Controller
                           data_jumlah($data50,1)
                           //data_jumlah($data51,)
                           ;
-       $data_persentase_penelitiann = persentase_jabfung_penelitian($jabfung, $data_penelitian);
+       $data_persentase_penelitian = persentase_jabfung_penelitian($jabfung, $data_penelitian);
 
 
        function persentase_jabfung_pengabdian($jabfung, $data){

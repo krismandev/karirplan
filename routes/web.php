@@ -32,3 +32,4 @@ Route::post('Api/profil/update/sandi', 'API\Profil@updateSandi');
 
 Route::get('/hasil_plan', 'hasilController@index')->name('hasil_plan');
 Route::get('/hasil_plan/{id}', 'hasilController@delete');
+Route::get('/hasil_plan/{id}/detail', 'hasilController@detail');

@@ -42,6 +42,13 @@ class hasilController extends Controller
 
     }
 
+    public function detail($id){
+    	$hasil = DB::table('hasil')->where('id', $id)->first();
+        $detail = DB::table('hasil_detail')->where('hasil_id', $hasil->id)->get();
+
+    	return view('hasil_plan.detail', ['hasil' => $hasil, 'detail'=> $detail]);
+    }
+
     public function delete($id){
     	DB::table('hasil')->where('id', $id)->delete();
 

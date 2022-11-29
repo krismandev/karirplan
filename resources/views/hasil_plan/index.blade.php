@@ -46,6 +46,9 @@
                          <a href="hasil_plan/{{ $data -> id }}">
                           <button class="w3-button">Hapus</button>
                          </a>
+                         <a href="hasil_plan/{{ $data -> id }}/detail">
+                          <button class="w3-button">Detail</button>
+                         </a>
                     </td>
                 </tr>
                 @endforeach

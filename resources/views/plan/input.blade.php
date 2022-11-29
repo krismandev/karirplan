@@ -3,7 +3,7 @@
 
 @endsection
 @section("konten")
-<form action="{{ route('kirim_plan') }}" method="post">
+<form action="{{ route('kirim_plan') }}" method="post" enctype="multipart/form-data">
 {{ csrf_field() }}
 <div class="col-xs-12">
     <div class="sec-box">
@@ -148,10 +148,10 @@
                     <thead>
                         <tr>
                             <th class="col-md-0">No</th>
-                            <th class="col-md-8">Pertanyaan</th>
-                            <th class="col-md-2">Jawaban</th>
-                            <th class="col-md-2">Bukti</th>
+                            <th class="col-md-10">Pertanyaan</th>
+                            <th class="col-md-3">Jawaban</th>
                         </tr>
+                       
                     </thead>
                     <tbody>
 
@@ -162,7 +162,7 @@
                     
                             <td colspan="3">{{$unsur->nama_unsur}}</td>
                         </tr>
-                            @foreach($listSubUnsur as $parent => $subUnsur)
+                            @foreach($listSubUnsur as $subUnsur)
                                 @if($unsur->id_unsur == $subUnsur->id_unsur)
                                     <tr class="bold uppercase">
                                   
@@ -170,7 +170,7 @@
                                         <td colspan="3">{{$subUnsur->nama_subUnsur}}</td>
                                     </tr>
                                     
-                                        @foreach($listPertanyaan as $anak => $item)
+                                        @foreach($listPertanyaan  as $item)
                                             @if($item->id_subUnsur == $subUnsur->id_subUnsur )
                                             <tr>
                                                 <td></td>
@@ -201,11 +201,19 @@
                                                     </select>
                                                 </td>
                                                 @endif
-                                                <td>
-                                                <div class="input-group">
-                                                    <input class="form-control" type="file" id="formFile" name="bukti_{{$item->kode}}">
-                                                </div>
-                                                </td>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td class="bold">
+                                                        Bukti
+                                                        
+                                                    </td>
+                                                    <td>
+                                                    <div class="input-group">
+                                                            <input class="form-control" type="file" id="formFile" name="bukti_{{$item->kode}}" value="">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                
                                             
                                             </tr>
                                                 
