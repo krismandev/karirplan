@@ -359,58 +359,56 @@ class PlanController extends Controller
         
         // dd($data_bukti);
       
-        $data_pertanyaan =[];
-        foreach($data_bukti as $key => $item) {  
-            
-           $kode_bukti = Str::substr($key,6);
-           if($kode_bukti){
-                $id_pertanyaan = DB::table('pertanyaan')
-                            ->where('kode',$kode_bukti)
-                            ->first();
-                array_push($data_pertanyaan, $id_pertanyaan);
-           }
-      
-        }
-
-        $db_hasil = new Hasil;
-        $db_hasil->id_pegawai = $nip;
-        $db_hasil->semester = $semester;
-        $db_hasil->skor = $hasil;
-        $db_hasil->target = $jabfung;
-        $db_hasil->save();
-
-        foreach ($data_pertanyaan as $key => $pertanyaan){
-            foreach($data_bukti as $a => $value) { 
-                // dd(file($value));
-                if ($value != NUll) {
-                    $bukti = $value;
-                    $new_bukti = time()."_".$bukti->getClientOriginalName();
-                    // dd($new_bukti);
-                    $tujuan_upload = 'file/bukti';
-                    $bukti->move($tujuan_upload,$new_bukti);
-                    
-                        $db_hasil_detail = DB::table('hasil_detail')->insert([
-                            'hasil_id' => $db_hasil->id, 
-                            'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
-                            'bukti' => $new_bukti,
-                        ]);
-                }else{
-                    $db_hasil_detail = DB::table('hasil_detail')->insert([
-                        'hasil_id' => $db_hasil->id, 
-                        'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
-                        'bukti' => Null,
-                    ]);
+        if($data_bukti){
+            $data_pertanyaan =[];
+            foreach($data_bukti as $key => $item) {  
+                
+                $kode_bukti = Str::substr($key,6);
+                if($kode_bukti){
+                        $id_pertanyaan = DB::table('pertanyaan')
+                                    ->where('kode',$kode_bukti)
+                                    ->first();
+                        array_push($data_pertanyaan, $id_pertanyaan);
                 }
             }
 
+            $db_hasil = new Hasil;
+            $db_hasil->id_pegawai = $nip;
+            $db_hasil->semester = $semester;
+            $db_hasil->skor = $hasil;
+            $db_hasil->target = $jabfung;
+            $db_hasil->save();
+    
+            foreach ($data_pertanyaan as $key => $pertanyaan){
+                foreach($data_bukti as $a => $value) { 
+                    // dd($data_pertanyaan[$key]);
+                    if ($value != NUll) {
+                        $bukti = $value;
+                        $new_bukti = time()."_".$bukti->getClientOriginalName();
+                        // dd($new_bukti);
+                        $tujuan_upload = 'file/bukti';
+                        $bukti->move($tujuan_upload,$new_bukti);
+                        
+                            $db_hasil_detail = DB::table('hasil_detail')->insert([
+                                'hasil_id' => $db_hasil->id, 
+                                'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
+                                'bukti' => $new_bukti,
+                            ]);
+                    }  
+                }
+            }
+
+        }else{
+
+            $db_hasil = new Hasil;
+            $db_hasil->id_pegawai = $nip;
+            $db_hasil->semester = $semester;
+            $db_hasil->skor = $hasil;
+            $db_hasil->target = $jabfung;
+            $db_hasil->save();
+
         }
-
-        // foreach($list_pertanyaan_existing as $item){
-        //     DB::table('hasil_detail')->insert(
-        //         ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
-        //     );
-        // }
-
+        
         return redirect('/hasil_plan');
     }
 
