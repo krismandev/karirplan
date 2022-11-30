@@ -265,7 +265,6 @@ class PlanController extends Controller
                     $pertanyaan = $list_pertanyaan->where("kode",$key)->first();
 
                     switch ($key) {
-                        
                         case 'value':
                             // 
                             break;
@@ -341,6 +340,7 @@ class PlanController extends Controller
             $sum_unsur_penunjang += $item["nilai"];
         }
 
+        dd($sum_unsur_penunjang);
         $hasil = $sum_unsur_pendidikan + $sum_unsur_penelitian + $sum_unsur_pengabdian + $sum_unsur_penunjang ;
         // dd($hasil);
        

@@ -163,6 +163,7 @@
                                 @if($unsur->id_unsur == $subUnsur->id_unsur)
                                     <tr class="bold uppercase">
                                   
+                                    
                                         <td class="subJudul">#</td>
                                         <td colspan="3">{{$subUnsur->nama_subUnsur}}</td>
                                     </tr>
