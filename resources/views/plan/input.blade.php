@@ -268,16 +268,16 @@
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "3000",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
+            "hideDuration": "3000",
+            "timeOut": "10000",
+            "extendedTimeOut": "5000",
             "showEasing": "swing",
             "hideEasing": "linear",
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
 
-        toastr.error("Ada Error")
+        toastr.error("{{session('error')}}")
     </script>
 @endif
     
