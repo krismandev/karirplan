@@ -10,6 +10,7 @@ use App\modelPertanyaanDropdown;
 use App\modelUnsur;
 use App\modelSubUnsur;
 use App\Hasil;
+use App\HasilDetail;
 use Auth;
 class PlanController extends Controller
 {
@@ -124,18 +125,18 @@ class PlanController extends Controller
                             }
     
     
-                            $push = [
+                            $data[$pertanyaan->id_pertanyaan] = [
                                 "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
                                 "jawaban"=>$value,
                                 "nilai"=>$kredit
                             ];
     
-                            array_push($data,$push);
+                            // array_push($data,$push);
                             break;
                     }
                 }
             } catch (\Exception $e) {
-                $e->getMessage();
+                dd($e->getMessage());
             }
         }
 
@@ -179,18 +180,18 @@ class PlanController extends Controller
                             }
     
     
-                            $push = [
+                            $data[$pertanyaan->id_pertanyaan] = [
                                 "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
                                 "jawaban"=>$value,
                                 "nilai"=>$kredit
                             ];
     
-                            array_push($data,$push);
+                            // array_push($data,$push);
                             break;
                     }
                 }
             } catch (\Exception $e) {
-                $e->getMessage();
+                dd($e->getMessage());
             }
         }
 
@@ -235,13 +236,13 @@ class PlanController extends Controller
                             }
     
     
-                            $push = [
+                            $data[$pertanyaan->id_pertanyaan] = [
                                 "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
                                 "jawaban"=>$value,
                                 "nilai"=>$kredit
                             ];
     
-                            array_push($data,$push);
+                            // array_push($data,$push);
                             break;
                     }
                 }
@@ -290,18 +291,18 @@ class PlanController extends Controller
                             }
     
     
-                            $push = [
+                            $data[$pertanyaan->id_pertanyaan] = [
                                 "pertanyaan_id"=>$pertanyaan->id_pertanyaan,
                                 "jawaban"=>$value,
                                 "nilai"=>$kredit
                             ];
     
-                            array_push($data,$push);
+                            // array_push($data,$push);
                             break;
                     }
                 }
             } catch (\Exception $e) {
-                $e->getMessage();
+                dd($e->getMessage());
             }
         }
 
@@ -315,100 +316,149 @@ class PlanController extends Controller
         $jabfung = $request->plan_jabfung;
 
         $list_pertanyaan_existing = modelPertanyaan::all();
-        $list_data_unsur_pendidikan = $this->hitungUnsurPendidikan($request,$list_pertanyaan_existing);
-        $list_data_unsur_penelitian = $this->hitungUnsurPenelitian($request,$list_pertanyaan_existing);
-        $list_data_unsur_pengabdian = $this->hitungUnsurPengabdian($request,$list_pertanyaan_existing);
-        $list_data_unsur_penunjang = $this->hitungUnsurPenunjang($request,$list_pertanyaan_existing);
+        $list_jawaban_unsur_pendidikan = $this->hitungUnsurPendidikan($request,$list_pertanyaan_existing);
+        $list_jawaban_unsur_penelitian = $this->hitungUnsurPenelitian($request,$list_pertanyaan_existing);
+        $list_jawaban_unsur_pengabdian = $this->hitungUnsurPengabdian($request,$list_pertanyaan_existing);
+        $list_jawaban_unsur_penunjang = $this->hitungUnsurPenunjang($request,$list_pertanyaan_existing);
+        
+        
+        //filter yg jawabanny diisi saja
+        $list_pertanyaan_id = [];
+        $list_jawaban_unsur_pendidikan = array_filter($list_jawaban_unsur_pendidikan,function($item){
+            return ($item["jawaban"] != "0" && $item["jawaban"] != null);
+        });
+        $list_jawaban_unsur_penelitian = array_filter($list_jawaban_unsur_penelitian,function($item){
+            return ($item["jawaban"] != "0" && $item["jawaban"] != null);
+        });
+        $list_jawaban_unsur_pengabdian = array_filter($list_jawaban_unsur_pengabdian,function($item){
+            return ($item["jawaban"] != "0" && $item["jawaban"] != null);
+        });
+        $list_jawaban_unsur_penunjang = array_filter($list_jawaban_unsur_penunjang,function($item){
+            return ($item["jawaban"] != "0" && $item["jawaban"] != null);
+        });
+        
+        
      
         $sum_unsur_pendidikan = 0.0;
-        foreach ($list_data_unsur_pendidikan as $item) {
+        foreach ($list_jawaban_unsur_pendidikan as $item) {
             $sum_unsur_pendidikan += $item["nilai"];
+            $list_pertanyaan_id[] = $item["pertanyaan_id"];
         }
 
         $sum_unsur_penelitian= 0.0;
-        foreach($list_data_unsur_penelitian as $item){
+        foreach($list_jawaban_unsur_penelitian as $item){
             $sum_unsur_penelitian += $item["nilai"];
+            $list_pertanyaan_id[] = $item["pertanyaan_id"];
         }
 
         $sum_unsur_pengabdian = 0.0;
-        foreach ($list_data_unsur_pengabdian as $item) {
+        foreach ($list_jawaban_unsur_pengabdian as $item) {
             $sum_unsur_pengabdian += $item["nilai"];
+            $list_pertanyaan_id[] = $item["pertanyaan_id"];
         }
 
         $sum_unsur_penunjang = 0.0;
-        foreach ($list_data_unsur_penunjang as $item) {
+        foreach ($list_jawaban_unsur_penunjang as $item) {
             $sum_unsur_penunjang += $item["nilai"];
+            $list_pertanyaan_id[] = $item["pertanyaan_id"];
         }
+        
 
-        dd($sum_unsur_penunjang);
-        $hasil = $sum_unsur_pendidikan + $sum_unsur_penelitian + $sum_unsur_pengabdian + $sum_unsur_penunjang ;
+        // dd($list_pertanyaan_id);
+
+        $hasil_unsur_pendidikan = $this->persentase_jabfung_pendidikan($jabfung,$sum_unsur_pendidikan);
+        $hasil_unsur_penelitian = $this->persentase_jabfung_penelitian($jabfung,$sum_unsur_penelitian);
+        $hasil_unsur_pengabdian = $this->persentase_jabfung_pengabdian($jabfung,$sum_unsur_pengabdian);
+        $hasil_unsur_penunjang = $this->persentase_jabfung_penunjang($jabfung,$sum_unsur_penunjang);
+
+        $list_semua_pertanyaan_dijawab = array_merge($list_jawaban_unsur_pendidikan,$list_jawaban_unsur_penelitian,$list_jawaban_unsur_pengabdian,$list_jawaban_unsur_penunjang);
+
+        // komen dlu. ganggu
+        // if ($hasil_unsur_pendidikan["mencapaiMinimum"] == false) {
+        //     return back()->with('error','Angka kredit pada unsur Pendidikan belum mencapai persentase minimum');
+        // }
+        // if ($hasil_unsur_penelitian["mencapaiMinimum"] == false) {
+        //     return back()->with('error','Angka kredit pada unsur Penelitian belum mencapai persentase minimum');
+        // }
+
+        $hasil = $hasil_unsur_pendidikan["hasil"] + $hasil_unsur_penelitian["hasil"] + $hasil_unsur_pengabdian + $hasil_unsur_penunjang ;
         // dd($hasil);
        
         $semester = $request -> semester;
         $nip = $request -> nip_pegawai;
 
-        // dd($request->all());
+        $db_hasil = new Hasil;
+        $db_hasil->id_pegawai = $nip;
+        $db_hasil->semester = $semester;
+        $db_hasil->skor = $hasil;
+        $db_hasil->target = $jabfung;
+        $db_hasil->save();
 
-        $data_bukti = [];
-        foreach ($request->all() as $key => $value){
-            if (str_contains($key, 'bukti')) { 
-                $data_bukti += [ $key => $value ];
-                // array_push($data_bukti, $value);
+        $data_detail = [];
+        foreach ($list_semua_pertanyaan_dijawab as $key => $value) {
+            $pertanyaan = $list_pertanyaan_existing->where("id_pertanyaan",$value["pertanyaan_id"])->first();
+            // dd($pertanyaan);
+
+            
+            $file_gambar = $request->file("bukti_".$pertanyaan->kode);
+            $nama_file_gambar = null;
+            if ($file_gambar != null) {
+                $nama_file_gambar = time()."_".$file_gambar->getClientOriginalName();
+                $path = "file/bukti";
+                $file_gambar->move($path,$nama_file_gambar);
             }
+            // else{
+            //     //berarti text
+            //     $link = $request->get("bukti_".$pertanyaan->kode);
+            // }
+
+            $data = [
+                "hasil_id"=>$db_hasil->id,
+                "pertanyaan_id"=>$value["pertanyaan_id"],
+                "kredit"=>$value["nilai"],
+                "bukti"=>$nama_file_gambar,
+                "jawaban"=>$value["jawaban"]
+            ];
+            $data_detail[]=$data;
         }
-        
-        // dd($data_bukti);
-      
-        if($data_bukti){
-            $data_pertanyaan =[];
-            foreach($data_bukti as $key => $item) {  
-                
-                $kode_bukti = Str::substr($key,6);
-                if($kode_bukti){
-                        $id_pertanyaan = DB::table('pertanyaan')
-                                    ->where('kode',$kode_bukti)
-                                    ->first();
-                        array_push($data_pertanyaan, $id_pertanyaan);
-                }
-            }
 
-            $db_hasil = new Hasil;
-            $db_hasil->id_pegawai = $nip;
-            $db_hasil->semester = $semester;
-            $db_hasil->skor = $hasil;
-            $db_hasil->target = $jabfung;
-            $db_hasil->save();
-    
-            foreach ($data_pertanyaan as $key => $pertanyaan){
-                foreach($data_bukti as $a => $value) { 
-                    // dd($data_pertanyaan[$key]);
-                    if ($value != NUll) {
-                        $bukti = $value;
-                        $new_bukti = time()."_".$bukti->getClientOriginalName();
-                        // dd($new_bukti);
-                        $tujuan_upload = 'file/bukti';
-                        $bukti->move($tujuan_upload,$new_bukti);
-                        
-                            $db_hasil_detail = DB::table('hasil_detail')->insert([
-                                'hasil_id' => $db_hasil->id, 
-                                'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
-                                'bukti' => $new_bukti,
-                            ]);
-                    }  
-                }
-            }
+        // dd($data_detail);
 
-        }else{
+        HasilDetail::insert($data_detail);
+        // foreach ($data_pertanyaan as $key => $pertanyaan){
+        //     foreach($data_bukti as $a => $value) { 
+        //         // dd(file($value));
+        //         if ($value != NUll) {
+        //             $bukti = $value;
+        //             $new_bukti = time()."_".$bukti->getClientOriginalName();
+        //             // dd($new_bukti);
+        //             $tujuan_upload = 'file/bukti';
+        //             $bukti->move($tujuan_upload,$new_bukti);
+                    
+        //                 $db_hasil_detail = DB::table('hasil_detail')->insert([
+        //                     'hasil_id' => $db_hasil->id, 
+        //                     'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
+        //                     'bukti' => $new_bukti,
+        //                 ]);
+        //         }else{
+        //             $db_hasil_detail = DB::table('hasil_detail')->insert([
+        //                 'hasil_id' => $db_hasil->id, 
+        //                 'pertanyaan_id' => $data_pertanyaan[$key]->id_pertanyaan, 
+        //                 'bukti' => Null,
+        //             ]);
+        //         }
+        //     }
 
-            $db_hasil = new Hasil;
-            $db_hasil->id_pegawai = $nip;
-            $db_hasil->semester = $semester;
-            $db_hasil->skor = $hasil;
-            $db_hasil->target = $jabfung;
-            $db_hasil->save();
 
-        }
-        
+
+        // }
+
+        // foreach($list_pertanyaan_existing as $item){
+        //     DB::table('hasil_detail')->insert(
+        //         ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
+        //     );
+        // }
+
         return redirect('/hasil_plan');
     }
 
@@ -438,36 +488,57 @@ class PlanController extends Controller
         }
 
         $data = [
-            "hasil"=>$hasil,
-            "mencapaiMinimum"=>$mencapaiMinimum
+            "mencapaiMinimum"=>$mencapaiMinimum,
+            "hasil"=>$hasil
         ];
         return $data;
     }
 
     function persentase_jabfung_penelitian($jabfung, $data){
         if($jabfung == 100 or $jabfung == 150){
-            $hasil = $data * 0.25;
+            $minimal = $jabfung * 0.25;
+            $hasil = $data;
         }elseif($jabfung == 200 or $jabfung == 300){
-            $hasil = $data * 0.35;
+            $minimal = $jabfung * 0.35;
+            $hasil = $data;
         }elseif($jabfung == 400 or $jabfung == 550 or $jabfung == 700){
-            $hasil = $data * 0.40;
+            $minimal = $jabfung * 0.40;
+            $hasil = $data;
         }elseif($jabfung == 850 or $jabfung == 1050){
-            $hasil = $data * 0.45;
+            $minimal = $jabfung * 0.45;
+            $hasil = $data;
         }else{
             $hasil = 0;
         }
-        return $hasil;
+        if ($hasil > $minimal) {
+            $mencapaiMinimum = true;
+        }else {
+            $mencapaiMinimum = false;
+        }
+
+        $data = [
+            "mencapaiMinimum"=>$mencapaiMinimum,
+            "hasil"=>$hasil
+        ];
+
+        return $data;
     }
 
     function persentase_jabfung_pengabdian($jabfung, $data){
-        $hasil = $data * 0.10;
+        $maksimal = $jabfung * 0.1;
 
-        return $hasil;
+        if ($data >= $maksimal) {
+            return $maksimal;
+        }
+        return $data;
     }
 
     function persentase_jabfung_penunjang($jabfung, $data){
-        $hasil = $data * 0.10;
-        
-        return $hasil;
+        $maksimal = $jabfung * 0.1;
+
+        if ($data >= $maksimal) {
+            return $maksimal;
+        }
+        return $data;
     }
 }

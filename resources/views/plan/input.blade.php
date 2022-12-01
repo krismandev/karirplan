@@ -1,4 +1,7 @@
 @extends("layouts.app")
+@section('link')
+
+@endsection
 @section("konten")
 <form action="{{ route('kirim_plan') }}" method="post" enctype="multipart/form-data">
 {{ csrf_field() }}
@@ -255,5 +258,33 @@
 @endsection
 
 @section("script")
+
+@if (Session::has('error'))
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "3000",
+            "timeOut": "10000",
+            "extendedTimeOut": "5000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+        toastr.error("{{session('error')}}")
+    </script>
+@endif
+    
+    <script>
+        $(document).ready(function () {
+        });
+    </script>
     @include("layouts.notifikasi")
 @endsection
