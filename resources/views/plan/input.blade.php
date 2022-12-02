@@ -97,9 +97,13 @@
                                 </td>
                             @else 
                                 <td>
+                                    <input type="radio" name="jabfung_saat_ini" value="{{$item->angka_kredit}}" checked> {{ $item -> nama_jabfung }} 
+                                    <input type="radio" name="jabfung_saat_ini" value="{{$jabfung_sementara->jabfung->angka_kredit}}" style="margin-left: 50px;"> {{ $jabfung_sementara->jabfung->nama_jabfung }} (Hasil Planning Sebelumnya)
+                                </td>
+                                {{-- <td>
                                     {{ $jabfung_sementara->jabfung->nama_jabfung }} <span class="badge badge-info">Sementara</span>   
                                     <input type="hidden" name="jabfung_saat_ini" value="{{$jabfung_sementara->jabfung->angka_kredit}}">
-                                </td>
+                                </td> --}}
                             @endif
                         </tr>
                         @endforeach
@@ -222,69 +226,81 @@
                     
                             <td colspan="3">{{$unsur->nama_unsur}}</td>
                         </tr>
-                            @foreach($listSubUnsur as $subUnsur)
-                                @if($unsur->id_unsur == $subUnsur->id_unsur)
-                                    <tr class="bold uppercase">
-                                  
-                                    
-                                        <td class="subJudul">#</td>
-                                        <td colspan="3">{{$subUnsur->nama_subUnsur}}</td>
-                                    </tr>
-                                    
-                                        @foreach($listPertanyaan  as $item)
-                                            @if($item->id_subUnsur == $subUnsur->id_subUnsur )
-                                            <tr>
-                                                <td></td>
-                                                <td> {{$item->pertanyaan}}</td>
-                                                @if($item->jenis == 1)
-                                                <td>
-                                                    <select class="form-control" id="{{$item->kode}}" name="{{$item->kode}}">
-                                                        <option value="1">Ya</option>
-                                                        <option value="0" selected>Tidak</option>
-                                                    </select>
-                                                </td>
-                                                @elseif($item->jenis == 2)
-                                                <td>
-                                                    <div class="input-group">
-                                                        <input type="text" id="{{$item->kode}}" class="form-control" value="0" onkeypress="return validasi_number(event)" maxlength="3" name="{{$item->kode}}">
-                                                        <span class="input-group-addon btn-default">{{$item->satuan}}</span>
-                                                    </div>
-                                                </td>
-                                                @elseif($item->jenis == 3)
-                                                <td>
-                                                    <select class="form-control" id="{{$item->kode}}" name="{{$item->kode}}">
-                                                        @foreach($listPertanyaanDropdown as $dropdown)
-                                                            @if($dropdown->pertanyaan_id == $item->id_pertanyaan)
-                                                            <!-- harus ambil dari db -->
-                                                                <option value="{{$dropdown->kredit}}">{{$dropdown->judul}}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                @endif
-                                                <tr>
-                                                    <td>&nbsp;</td>
-                                                    <td class="bold">
-                                                    
-                                                    Bukti (Inputkan Salah Satu)  
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-control mb-3">
-                                                            <input class="form-control" type="text" placeholder="Masukkan Link Bukti" name="bukti_{{$item->kode}}" value="">
-                                                        </div><br/>
-                                                        <div class="input-control mt-3">
-                                                            <input class="form-control" type="file" name="bukti_{{$item->kode}}" value="">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                
-                                            
-                                            </tr>
-                                                
+                        @foreach($listSubUnsur as $subUnsur)
+                            @if($unsur->id_unsur == $subUnsur->id_unsur)
+                            <tr class="bold uppercase">
+                            
+                            
+                                <td class="subJudul">#</td>
+                                <td colspan="3">{{$subUnsur->nama_subUnsur}}</td>
+                            </tr>
+                            
+                            @foreach($listPertanyaan  as $item)
+                            @if($item->id_subUnsur == $subUnsur->id_subUnsur )
+                            <tr style="background-color: white;">
+                                <td></td>
+                                <td> {{$item->pertanyaan}}</td>
+                                @if($item->jenis == 1)
+                                <td>
+                                    <select class="form-control" id="{{$item->kode}}" name="{{$item->kode}}">
+                                        <option value="1">Ya</option>
+                                        <option value="0" selected>Tidak</option>
+                                    </select>
+                                </td>
+                                @elseif($item->jenis == 2)
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" id="{{$item->kode}}" class="form-control" value="0" onkeypress="return validasi_number(event)" maxlength="3" name="{{$item->kode}}">
+                                        <span class="input-group-addon btn-default">{{$item->satuan}}</span>
+                                    </div>
+                                </td>
+                                @elseif($item->jenis == 3)
+                                <td>
+                                    <select class="form-control" id="{{$item->kode}}" name="{{$item->kode}}">
+                                        @foreach($listPertanyaanDropdown as $dropdown)
+                                            @if($dropdown->pertanyaan_id == $item->id_pertanyaan)
+                                            <!-- harus ambil dari db -->
+                                                <option value="{{$dropdown->kredit}}">{{$dropdown->judul}}</option>
                                             @endif
                                         @endforeach
-                                @endif  
+                                    </select>
+                                </td>
+                                @endif
+                            </tr>
+                            <tr style="background-color: white; border-bottom: 1px dashed; grey;">
+                                <td></td>
+                                <td colspan="2">
+                                    
+                                    <div class="row" style="padding-left: 12px;">
+                                        <span for="">Upload bukti</span>
+                                        <input type="radio" class="bukti-type" name="radio_bukti_{{$item->kode}}" value="link">Link
+                                        <input type="radio" class="bukti-type" name="radio_bukti_{{$item->kode}}" value="file">File
+                                    </div>
+                                    <div class="row bukti-holder" style="padding-left: 12px;">
+                                        <input type="text" name="bukti_{{$item->kode}}" class="form-control bukti-link" style="display: none;">
+                                        <input type="file" name="bukti_{{$item->kode}}" class="form-control bukti-file" style="display: none;">
+                                    </div>
+
+                                </td>
+                                {{-- <td>&nbsp;</td>
+                                <td class="bold">
+                                
+                                Bukti (Inputkan Salah Satu)  
+                                </td>
+                                <td>
+                                    <div class="input-control mb-3">
+                                        <input class="form-control" type="text" placeholder="Masukkan Link Bukti" name="bukti_{{$item->kode}}" value="">
+                                    </div><br/>
+                                    <div class="input-control mt-3">
+                                        <input class="form-control" type="file" name="bukti_{{$item->kode}}" value="">
+                                    </div>
+                                </td> --}}
+                            </tr>
+                                
+                            @endif
                             @endforeach
+                            @endif  
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -351,11 +367,25 @@ toastr.options = {
 @endif
     
     <script>
+        // $(".class-radio").change(function (e) { 
+        //     e.preventDefault();
+        //     let radio = $(this)
+        //     if (radio.val() == "link") {
+        //         radio.append("<input type='text'>Link");
+        //     }else{
+        //         radio.append()
+        //     }
+            
+        // });
         $(document).ready(function () {
-            // headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     },
-            // $(this).serialize(),
+            
+            listener()
+
+            
+        });
+
+
+        function listener() {
             $(document).on('submit', '.plan-form', function(e){
                 e.preventDefault();
                 showLoading();
@@ -394,7 +424,39 @@ toastr.options = {
                     }
                 });
             });
-        });
+
+
+            $(".bukti-type").change(function (e) { 
+                e.preventDefault();
+                let bukti_type = $(this).val();
+                if (bukti_type == "link") {
+                    input_link = $(this).closest("td").find(".bukti-holder .bukti-link")
+                    input_file = $(this).closest("td").find(".bukti-holder .bukti-file")
+                    // holder.empty()
+                    input_link.fadeIn()
+                    input_file.hide()
+                    // attrName = $(this).attr("name").replace('radio_','')
+                    // html = '<input type="text" name="'+attrName+'" class="form-control bukti-input">'
+                    
+                    // holder.append(html)
+                }else{
+                    input_file = $(this).closest("td").find(".bukti-holder .bukti-file")
+                    input_link = $(this).closest("td").find(".bukti-holder .bukti-link")
+                    // holder.empty()
+                    input_file.fadeIn()
+                    input_link.hide()
+                    // attrName = $(this).attr("name").replace('radio_','')
+
+                    // html = '<input type="file" name="'+attrName+'" class="form-control bukti-input">'
+                    // holder.append(html)
+                }
+
+                // $("form").on('change','.bukti-input',function () { 
+
+                // })
+                // listener()
+            });
+        }
 
 
     </script>
