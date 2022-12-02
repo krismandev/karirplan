@@ -321,9 +321,10 @@ class PlanController extends Controller
         $validator = Validator::make($request->all(), [
             'id_pegawai' => 'required',
             'plan_jabfung' => 'required',
+            'semester'=>'required'
         ]);
 
-        dd($request->all());
+        // dd($request->all());
 
 
         if ($validator->fails())

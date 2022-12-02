@@ -352,14 +352,22 @@ toastr.options = {
     
     <script>
         $(document).ready(function () {
+            // headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     },
+            // $(this).serialize(),
             $(document).on('submit', '.plan-form', function(e){
                 e.preventDefault();
                 showLoading();
+                var formData = new FormData($(this)[0]);
+                console.log(formData);
                 $.ajax({
                     url : $(this).attr('action'),
                     type : 'POST',
-                    dataType : 'json',
-                    data : $(this).serialize(),
+                    data : formData,
+                    dataType: 'json',
+                    contentType : false,
+                    processData : false,
                     success : function(resp){
                         console.log(resp);
                         hideLoading();
@@ -376,8 +384,13 @@ toastr.options = {
                     },
                     error: function(error) {
                         hideLoading()
-                        let response = error.responseJSON;
-                        toastr.error(response.message);
+                        if (error.responseJSON) {
+                            let response = error.responseJSON;
+                            toastr.error(response.message);
+                        }else{
+                            toastr.error("Something wrong");
+                        }
+                        
                     }
                 });
             });
