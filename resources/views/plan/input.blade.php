@@ -205,12 +205,15 @@
                                                 <tr>
                                                     <td>&nbsp;</td>
                                                     <td class="bold">
-                                                        Bukti
-                                                        
+                                                    
+                                                    Bukti (Inputkan Salah Satu)  
                                                     </td>
                                                     <td>
-                                                    <div class="input-group">
-                                                            <input class="form-control" type="file" id="formFile" name="bukti_{{$item->kode}}" value="">
+                                                        <div class="input-control mb-3">
+                                                            <input class="form-control" type="text" placeholder="Masukkan Link Bukti" name="bukti_{{$item->kode}}" value="">
+                                                        </div><br/>
+                                                        <div class="input-control mt-3">
+                                                            <input class="form-control" type="file" name="bukti_{{$item->kode}}" value="">
                                                         </div>
                                                     </td>
                                                 </tr>

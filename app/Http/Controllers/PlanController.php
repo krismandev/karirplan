@@ -397,6 +397,7 @@ class PlanController extends Controller
         $data_detail = [];
         foreach ($list_semua_pertanyaan_dijawab as $key => $value) {
             $pertanyaan = $list_pertanyaan_existing->where("id_pertanyaan",$value["pertanyaan_id"])->first();
+        //    dd( $request->get("bukti_".$pertanyaan->kode));
             // dd($pertanyaan);
 
             
@@ -406,18 +407,28 @@ class PlanController extends Controller
                 $nama_file_gambar = time()."_".$file_gambar->getClientOriginalName();
                 $path = "file/bukti";
                 $file_gambar->move($path,$nama_file_gambar);
+                // $type_file = "file";
+            }else{
+                //berarti text
+                $link = $request->get("bukti_".$pertanyaan->kode);
+                // $type_url = "url";
             }
-            // else{
-            //     //berarti text
-            //     $link = $request->get("bukti_".$pertanyaan->kode);
-            // }
 
+            if($nama_file_gambar){
+                $type_bukti = "file";
+            }elseif($link){
+                $type_bukti = 'link';
+            }else{
+                $type_bukti = "tidak diupload";
+            }
             $data = [
                 "hasil_id"=>$db_hasil->id,
                 "pertanyaan_id"=>$value["pertanyaan_id"],
                 "kredit"=>$value["nilai"],
-                "bukti"=>$nama_file_gambar,
-                "jawaban"=>$value["jawaban"]
+                "bukti"=>$nama_file_gambar ?? $link ,
+                "jawaban"=>$value["jawaban"],
+                "type_bukti"=> $type_bukti,
+            
             ];
             $data_detail[]=$data;
         }

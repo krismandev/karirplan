@@ -44,9 +44,14 @@ class hasilController extends Controller
 
     public function detail($id){
     	$hasil = DB::table('hasil')->where('id', $id)->first();
-        $detail = DB::table('hasil_detail')->where('hasil_id', $hasil->id)->get();
-
-    	return view('hasil_plan.detail', ['hasil' => $hasil, 'detail'=> $detail]);
+        $detail = DB::table('hasil_detail as a')
+                ->join('pertanyaan as b', 'b.id_pertanyaan','=','a.pertanyaan_id')
+                ->where('hasil_id', $hasil->id)
+                ->get();
+                // dd($detail);
+        $jabfung = DB::table('jabfung')->where('angka_kredit',$hasil->target)->pluck('nama_jabfung')->first();
+      
+    	return view('hasil_plan.detail', ['hasil' => $hasil, 'detail'=> $detail,'jabfung' => $jabfung]);
     }
 
     public function delete($id){

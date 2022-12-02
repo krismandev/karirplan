@@ -54,6 +54,7 @@
                     <h4>{{$item->nama_jabfung}}</h4>
                 </div>
             </div>
+           
              @php
                 if(isset($jabfung_semen)){
                  echo "$jabfung_semen";
