@@ -24,7 +24,7 @@ Route::get('/profil/gantiSandi', 'ProfilController@gantiSandi');
 
 Route::get('/plan', 'PlanController@index')->name('plan');
 Route::get('/plan/input', 'PlanController@input');
-Route::post('/plan/input', 'PlanController@store')->name('kirim_plan');
+Route::post('/plan/input/store', 'PlanController@store')->name('kirim_plan');
 
 Route::get('Api', function() {return "API";})->name("api");
 Route::post('Api/profil/update', 'API\Profil@updateProfil');

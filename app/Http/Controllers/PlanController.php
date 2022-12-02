@@ -11,7 +11,12 @@ use App\modelUnsur;
 use App\modelSubUnsur;
 use App\Hasil;
 use App\HasilDetail;
+use App\Jabfung;
+use App\JabfungSementara;
+use App\modelJabatan;
 use Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 class PlanController extends Controller
 {
 
@@ -40,6 +45,8 @@ class PlanController extends Controller
         $listPertanyaan = modelPertanyaan::get();
 
         $listPertanyaanDropdown = modelPertanyaanDropdown::get();
+        $jabfung_sementara = JabfungSementara::where("id_pegawai",$data[0]->id_pegawai)->orderBy("created_at","desc")->first();
+        
 
         return view("plan.input")
                 ->with("jabfung", $jabfung)->with("data", $data)
@@ -47,7 +54,8 @@ class PlanController extends Controller
                 ->with("listUnsur", $listUnsur) 
                 ->with("listSubUnsur", $listSubUnsur) 
                 ->with("listPertanyaan", $listPertanyaan)
-                ->with("listPertanyaanDropdown", $listPertanyaanDropdown);
+                ->with("listPertanyaanDropdown", $listPertanyaanDropdown)
+                ->with("jabfung_sementara",$jabfung_sementara);
         
     }
 
@@ -311,10 +319,40 @@ class PlanController extends Controller
     }
 
     public function store( Request $request){
-        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'id_pegawai' => 'required',
+            'plan_jabfung' => 'required',
+        ]);
 
-        //jabfung tujuan. nilai ny angka kredit tujuan
+        dd($request->all());
+
+
+        if ($validator->fails())
+        {
+            // $messages = $validator->messages();
+            // $error_message = '';
+            // foreach ($messages as $) {
+            //     # code...
+            // }
+            $messages = $validator->errors();
+            $err_message = implode('', $messages->all(':message'));
+            // return Redirect::back()->withErrors($validator);
+            $resp = [
+                "type"=>"error",
+                "message"=>$err_message
+            ];
+            return response()->json($resp,400);
+        }
         $jabfung = $request->plan_jabfung;
+        $jabfung_saat_ini = $request->jabfung_saat_ini;
+        if ($jabfung_saat_ini >= $jabfung) {
+            $resp = [
+                "type"=>"error",
+                "message"=>"Tidak dapat memilih jabatan ini"
+            ];
+
+            return response()->json($resp,400);
+        }
 
         $list_pertanyaan_existing = modelPertanyaan::all();
         $list_jawaban_unsur_pendidikan = $this->hitungUnsurPendidikan($request,$list_pertanyaan_existing);
@@ -375,21 +413,31 @@ class PlanController extends Controller
         $list_semua_pertanyaan_dijawab = array_merge($list_jawaban_unsur_pendidikan,$list_jawaban_unsur_penelitian,$list_jawaban_unsur_pengabdian,$list_jawaban_unsur_penunjang);
 
         // komen dlu. ganggu
-        // if ($hasil_unsur_pendidikan["mencapaiMinimum"] == false) {
-        //     return back()->with('error','Angka kredit pada unsur Pendidikan belum mencapai persentase minimum');
-        // }
-        // if ($hasil_unsur_penelitian["mencapaiMinimum"] == false) {
-        //     return back()->with('error','Angka kredit pada unsur Penelitian belum mencapai persentase minimum');
-        // }
+        if ($hasil_unsur_pendidikan["mencapaiMinimum"] == false) {
+            $resp = [
+                "type"=>"error",
+                "message"=>"Angka kredit pada unsur Pendidikan belum mencapai persentase minimum"
+            ];
+
+            return response()->json($resp,400);
+        }
+        if ($hasil_unsur_penelitian["mencapaiMinimum"] == false) {
+            $resp = [
+                "type"=>"error",
+                "message"=>"Angka kredit pada unsur Penelitian belum mencapai persentase minimum"
+            ];
+
+            return response()->json($resp,400);
+        }
 
         $hasil = $hasil_unsur_pendidikan["hasil"] + $hasil_unsur_penelitian["hasil"] + $hasil_unsur_pengabdian + $hasil_unsur_penunjang ;
         // dd($hasil);
        
         $semester = $request -> semester;
-        $nip = $request -> nip_pegawai;
+        $id_pegawai = $request -> id_pegawai;
 
         $db_hasil = new Hasil;
-        $db_hasil->id_pegawai = $nip;
+        $db_hasil->id_pegawai = $id_pegawai;
         $db_hasil->semester = $semester;
         $db_hasil->skor = $hasil;
         $db_hasil->target = $jabfung;
@@ -421,6 +469,14 @@ class PlanController extends Controller
                 "jawaban"=>$value["jawaban"]
             ];
             $data_detail[]=$data;
+        }
+
+        if ($hasil >= $jabfung) {
+            $jabfung = Jabfung::where("angka_kredit",$jabfung)->first();
+            JabfungSementara::create([
+                "id_jabfung"=>$jabfung->id_jabfung,
+                "id_pegawai"=>$id_pegawai,
+            ]);
         }
 
         // dd($data_detail);
@@ -456,11 +512,17 @@ class PlanController extends Controller
 
         // foreach($list_pertanyaan_existing as $item){
         //     DB::table('hasil_detail')->insert(
-        //         ['id_pegawai' => $nip, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
+        //         ['id_pegawai' => $id_pegawai, 'semester' => $semester, 'skor' => $hasil, 'target' => $jabfung]
         //     );
         // }
 
-        return redirect('/hasil_plan');
+        $resp = [
+            "type"=>"success",
+            "message"=>"Berhasil input plan",
+            "redirect"=>"/hasil_plan"
+        ];
+
+        return response()->json($resp);
     }
 
     function persentase_jabfung_pendidikan($jabfung, $data){

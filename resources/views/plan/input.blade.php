@@ -1,11 +1,63 @@
 @extends("layouts.app")
 @section('link')
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/selectize.css')}}">
+<style type="text/css">
+    .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999999;
+        background-color: #fff;
+    }
+    .loading {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        font: 14px arial;
+    }
 
+    #page-loader{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(255,255,255,.75);
+	z-index:5000;
+	display:flex;
+	display:-moz-flex;
+	justify-content:center;
+	align-items:center;
+    }
+
+    #page-loader svg{
+	color:#000;
+	animation : spin 1s linear infinite;
+	-moz-animation : spin 1s linear infinite;
+	-webkit-animation : spin 1s linear infinite;
+    }
+</style>
 @endsection
 @section("konten")
-<form action="{{ route('kirim_plan') }}" method="post" enctype="multipart/form-data">
+{{-- <div class="preloader">
+    <div class="loading">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    </div>
+</div> --}}
+<div id="page-loader" style="display: none;">
+
+</div>
+<form action="{{ route('kirim_plan') }}" method="post" enctype="multipart/form-data" class="plan-form">
 {{ csrf_field() }}
 <div class="col-xs-12">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     <div class="sec-box">
         <a class="closethis">Close</a>
         <header>
@@ -31,16 +83,24 @@
                             </td>
                             <td>
                                 {{ $item -> nip }}
-                                <input type="hidden" name="nip_pegawai" value="{{ $item -> id_pegawai }}">
+                                <input type="hidden" name="id_pegawai" value="{{ $item -> id_pegawai }}">
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 Jabatan Fungsional saat ini :
                             </td>
-                            <td>
-                                {{ $item -> nama_jabfung }}    
-                            </td>
+                            @if ($jabfung_sementara == null)
+                                <td>
+                                    {{ $item -> nama_jabfung }}    
+                                    <input type="hidden" name="jabfung_saat_ini" value="{{$item->angka_kredit}}">
+                                </td>
+                            @else 
+                                <td>
+                                    {{ $jabfung_sementara->jabfung->nama_jabfung }} <span class="badge badge-info">Sementara</span>   
+                                    <input type="hidden" name="jabfung_saat_ini" value="{{$jabfung_sementara->jabfung->angka_kredit}}">
+                                </td>
+                            @endif
                         </tr>
                         @endforeach
                         <tr>
@@ -49,7 +109,7 @@
                             </td>
                             <td>
                                 <select name="plan_jabfung" class="form-control" style="width: 30%;" id="plan_jabfung">
-                                    <option value="0">Pilih Jabatan Fungsional</option>
+                                    <option value="">Pilih Jabatan Fungsional</option>
                                     @foreach($jabfung as $option)
                                     <option value="{{$option -> angka_kredit}}">{{ $option -> nama_jabfung }} - {{ $option -> angka_kredit }}</option>
                                     @endforeach
@@ -249,41 +309,79 @@
 </script>
 @endsection
 
-@section("link")
+@section("script")
 <script type="text/javascript" src="{{asset('assets/validasi/inputan.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/validasi/pesan.min.js')}}"></script>
-<link rel="stylesheet" type="text/css" href="{{asset('assets/css/selectize.css')}}">
 <script type="text/javascript" src="{{asset('assets/js/selectize.js')}}"></script>
-@endsection
-
-@section("script")
-
+<script>
+toastr.options = {
+    "closeButton": true,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "3000",
+    "hideDuration": "3000",
+    "timeOut": "10000",
+    "extendedTimeOut": "5000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+</script>
 @if (Session::has('error'))
     <script>
-        toastr.options = {
-            "closeButton": true,
-            "newestOnTop": false,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "3000",
-            "hideDuration": "3000",
-            "timeOut": "10000",
-            "extendedTimeOut": "5000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
-
         toastr.error("{{session('error')}}")
+    </script>
+@endif
+
+@if($errors->any())
+    @php
+        $message = implode('', $errors->all(':message'));
+    @endphp
+    <script>
+        toastr.error("{{$message}}");
     </script>
 @endif
     
     <script>
         $(document).ready(function () {
+            $(document).on('submit', '.plan-form', function(e){
+                e.preventDefault();
+                showLoading();
+                $.ajax({
+                    url : $(this).attr('action'),
+                    type : 'POST',
+                    dataType : 'json',
+                    data : $(this).serialize(),
+                    success : function(resp){
+                        console.log(resp);
+                        hideLoading();
+                        if(resp.type == 'success'){
+                            toastr.success(resp.message);
+                        }
+                        if(resp.redirect){
+                            setTimeout(function (){
+                                window.location = resp.redirect;
+                            }, 1500); 
+
+                        }
+                        
+                    },
+                    error: function(error) {
+                        hideLoading()
+                        let response = error.responseJSON;
+                        toastr.error(response.message);
+                    }
+                });
+            });
         });
+
+
     </script>
     @include("layouts.notifikasi")
+
+
 @endsection
